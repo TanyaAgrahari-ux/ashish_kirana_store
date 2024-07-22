@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>news website</title>
+    <style>
+        * {
+            margin: 0%;
+            padding: 0%;
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background-color: silver;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            background-color: black;
+            color: white;
+            padding: 16px;
+
+
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-left: 5px;
+
+        }
+
+        .logo li {
+            list-style: none;
+            margin: 25px;
+            font-size: 19px;
+
+        }
+
+        .logo li:hover {
+            color: rgb(41, 76, 170);
+            border-bottom: 2px solid black;
+            cursor: pointer;
+        }
+
+        .searchBar {
+            display: flex;
+
+        }
+
+        .searchBar input {
+            width: 200px;
+            padding: 9px;
+            font-size: 18px;
+            border: none;
+            border-radius: 3px;
+            margin-inline: 5px;
+
+        }
+
+        .searchBar button {
+            width: 60px;
+            height: 31px;
+            background-color: rgb(21, 84, 146);
+            color: white;
+            border-radius: 3px;
+            border: none;
+            font-size: 14px;
+
+            cursor: pointer;
+
+        }
+
+        .category {
+            position: absolute;
+            margin-top: 122px;
+            color: black;
+            margin-left: 166px;
+
+
+        }
+
+        @media only screen and(max-width:835px) {
+            li {
+                display: none;
+
+            }
+
+        }
+
+        .cardData {
+            display: grid;
+            justify-content: center;
+            width: 80%;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            margin: auto;
+            margin-top: 122px;
+
+        }
+
+        .card {
+            width: 300px;
+            background-color: white;
+            padding: 11px;
+            margin-top: 25px;
+            cursor: pointer;
+        }
+
+        .card img {
+            width: 100%;
+            height: 45%;
+
+        }
+
+        .card h3 {
+            margin-top: 10px;
+            padding: 3px;
+
+        }
+
+        .card p {
+            margin-top: 3px;
+            padding: 2px;
+
+        }
+
+        @media only screen and(max-width:700px) {
+            nav {
+                flex-direction: coloumn;
+                text-align: center;
+                justify-content: center;
+
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <h1>Xnews Web</h1>
+                <Li id="politics" onclick="navClick('politics')">Politics</Li>
+
+                <Li id="sports" onclick="navClick('sports')">Sports</Li>
+                <Li id="technology" onclick="navClick('technology')">Technology</Li>
+
+            </div>
+            <br>
+            <div class="category">
+                <h1 id="type"></h1>
+            </div>
+            <div class="searchBar">
+                <input type="text" placeholder="Search Here" value="" id="inputData">
+                <button id="searchBtn">Search</button>
+            </div>
+
+
+
+
+        </nav>
+        <div class="cardData">
+
+
+
+        </div>
+    </div>
+    <script>
+        let key = "ca070e648798461aae48a6901cad55a7";
+        let cardData = document.querySelector(".cardData");
+        let SearchBtn = document.getElementById("searchBtn");
+        let inputData = document.getElementById("inputData");
+        let searchType = document.getElementById("type");
+        const getData = async (input) => {
+            let res = await fetch(`https://newsapi.org/v2/everything?q=${input}&apiKey=${key}`);
+            let jsonData = await res.json();
+            console.log(jsonData.articles);
+            searchType.innerText = "Search:" + input;
+            inputData.value = "";
+            cardData.innerHTML = "";
+            jsonData.articles.forEach(function (article) {
+                console.log(article);
+
+                let divs = document.createElement("div");
+                divs.classList.add("card");
+                cardData.appendChild(divs);
+                divs.innerHTML = `
+        <img src="${article.urlToImage}" alt="">
+        <h3>${article.title}</h3>
+        <p>${article.description
+                    }</p>
+    
+        `
+                divs.addEventListener("click", function () {
+                    window.open(article.url);
+
+                });
+
+
+            });
+        }
+        window.addEventListener("load", function () {
+            getData("India");
+        })
+        window.add
+        SearchBtn.addEventListener("click", function () {
+            let inputText = inputData.value;
+
+            getData(inputText);
+        })
+        function navClick(navName) {
+            if (navName == "politics") {
+                document.getElementById("politics").style.color = "blue";
+                document.getElementById("sports").style.color = "white";
+                document.getElementById("technology").style.color = "white";
+            }
+            if (navName == "sports") {
+                document.getElementById("politics").style.color = "white";
+                document.getElementById("sports").style.color = "blue";
+                document.getElementById("technology").style.color = "white";
+            }
+            if (navName == "technology") {
+                document.getElementById("politics").style.color = "white";
+                document.getElementById("sports").style.color = "white";
+                document.getElementById("technology").style.color = "blue";
+            }
+            getData(navName);
+        }
+
+
+    </script>
+
+
+
+</body>
+
+</html>
